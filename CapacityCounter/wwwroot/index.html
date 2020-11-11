@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="lib/jquery.dynameter.css">
+    <link rel="stylesheet" type="text/css" href="lib/index.css">
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <div id="payloadMeterDiv"></div>
+
+        <label id="count">0</label>
+
+        <input type="button" id="increment" value="inc" />
+        <input type="button" id="decrement" value="dec" />
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.dynameter.js"></script>
+    <script type="text/javascript" src="lib/signalr.min.js"></script>
+
+    <script>
+        var connection;
+        var $myPayloadMeter;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl('/signal')
+                .build();
+
+            connection.on('broadcast', function (count) {
+
+                var l = document.getElementById('count');
+
+                l.innerText = count;
+                $myPayloadMeter.changeValue(count);
+                return;
+            });
+
+            connection.start()
+                .catch(error => {
+                    console.error(error.message);
+                });
+
+        });
+
+        $(document).ready(function () {
+
+            $('#decrement').on('click', function (e) {
+                var l = document.getElementById('count');
+                var count = parseInt(l.innerText);
+                connection.invoke('signal', 'dec', count);
+                
+
+            });
+
+            $('#increment').on('click', function () {
+                var l = document.getElementById('count');
+                var count = parseInt(l.innerText);
+                connection.invoke('signal', 'inc', count);
+                
+
+            });
+            $myPayloadMeter = $("div#payloadMeterDiv").dynameter({
+                width: 200,
+                label: 'capacity',
+                value: 0,
+                min: 0,
+                max: 500,
+                unit: 'persons',
+                regions: {
+                    400: 'warn',
+                    500: 'error'
+                }
+            });
+
+        })
+    </script>
+</body>
+</html>
