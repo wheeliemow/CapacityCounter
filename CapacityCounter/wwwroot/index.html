@@ -26,23 +26,36 @@ SOFTWARE.-->
     <meta charset="utf-8" />
     <title></title>
 
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="lib/jquery.dynameter.css">
-    <link rel="stylesheet" type="text/css" href="lib/index.css">
-    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="lib/jquery.dynameter.css" />
+    <link rel="stylesheet" type="text/css" href="lib/index.css" />
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="container">
-        <div id="payloadMeterDiv"></div>
-
-        <label id="count">0</label>
-
-        <input type="button" id="increment" value="inc" />
-        <input type="button" id="decrement" value="dec" />
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <div id="payloadMeterDiv" style="height:200px;"></div>
+                    </div>
+                    <label id="count" style="display:none;">0</label>
+                </div>
+                <div class="row justify-content-center" style="margin-top:20px;">
+                    <div class="col-lg-4">
+                        <input type="button" class="btn btn-lg btn-success " style="margin-right:20px;"id="increment" value="inc ++" />
+                        <input type="button" class="btn btn-lg btn-danger " id="decrement" value="dec --" />
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="lib/jquery.dynameter.js"></script>
     <script type="text/javascript" src="lib/signalr.min.js"></script>
 
@@ -78,7 +91,6 @@ SOFTWARE.-->
                 var count = parseInt(l.innerText);
                 connection.invoke('signal', 'dec', count);
 
-
             });
 
             $('#increment').on('click', function () {
@@ -86,18 +98,17 @@ SOFTWARE.-->
                 var count = parseInt(l.innerText);
                 connection.invoke('signal', 'inc', count);
 
-
             });
             $myPayloadMeter = $("div#payloadMeterDiv").dynameter({
                 width: 200,
                 label: 'capacity',
                 value: 0,
                 min: 0,
-                max: 500,
+                max: 60,
                 unit: 'persons',
                 regions: {
-                    400: 'warn',
-                    500: 'error'
+                    50: 'warn',
+                    59: 'error'
                 }
             });
 
