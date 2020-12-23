@@ -23,26 +23,38 @@
 
 
 using Microsoft.AspNetCore.SignalR;
+using NLog;
+using System;
 using System.Threading.Tasks;
 
 namespace CapacityCounter.Hubs
 {
     public class InOutHub : Hub
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
+
         public async Task Signal(string direction, int count)
         {
-            switch (direction)
+            try
             {
-                case "inc":
-                    count++;
-                    break;
+                switch (direction)
+                {
+                    case "inc":
+                        count++;
+                        break;
 
-                case "dec":
-                    count--;
-                    break;
+                    case "dec":
+                        count--;
+                        break;
+                }
+
+                await Clients.All.SendAsync("broadcast", count).ConfigureAwait(false);
+            }catch(Exception ex)
+            {
+                logger.Error(ex);
             }
-
-            await Clients.All.SendAsync("broadcast", count).ConfigureAwait(false);
+            
         }
     }
 }
